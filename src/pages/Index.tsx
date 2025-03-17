@@ -8,7 +8,9 @@ import TestimonialsSection from '../components/TestimonialsSection';
 import ContactSection from '../components/ContactSection';
 import Footer from '../components/Footer';
 import AccessibilityPanel from '../components/AccessibilityPanel';
-import { Settings } from 'lucide-react';
+import { Settings, Building, FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import CustomButton from '../components/ui/CustomButton';
 
 const Index = () => {
   const [isAccessibilityPanelOpen, setIsAccessibilityPanelOpen] = useState(false);
@@ -47,6 +49,64 @@ const Index = () => {
         <ServicesSection />
         <TestimonialsSection />
         <ContactSection />
+        
+        {/* Quick Links Section */}
+        <section className="py-12 bg-gradient-to-r from-swaraj-blue/5 to-transparent">
+          <div className="container mx-auto px-4 md:px-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-center text-swaraj-text mb-10">
+              Quick Access
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <div className="bg-swaraj-blue/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <FileText className="h-8 w-8 text-swaraj-blue" />
+                </div>
+                <h3 className="text-xl font-bold text-swaraj-text mb-2">Resume Tools</h3>
+                <p className="text-swaraj-darkGray mb-4">
+                  Create or analyze your resume with our AI-powered tools
+                </p>
+                <Link to="/jobs?tab=resumeTools">
+                  <CustomButton variant="outline" fullWidth>
+                    Access Tools
+                  </CustomButton>
+                </Link>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <div className="bg-swaraj-blue/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <Building className="h-8 w-8 text-swaraj-blue" />
+                </div>
+                <h3 className="text-xl font-bold text-swaraj-text mb-2">For Employers</h3>
+                <p className="text-swaraj-darkGray mb-4">
+                  Post jobs and manage applications in our employer dashboard
+                </p>
+                <Link to="/employer">
+                  <CustomButton variant="outline" fullWidth>
+                    Employer Dashboard
+                  </CustomButton>
+                </Link>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <div className="bg-swaraj-blue/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <Settings className="h-8 w-8 text-swaraj-blue" />
+                </div>
+                <h3 className="text-xl font-bold text-swaraj-text mb-2">Accessibility Options</h3>
+                <p className="text-swaraj-darkGray mb-4">
+                  Customize your experience with our accessibility features
+                </p>
+                <CustomButton 
+                  variant="outline" 
+                  fullWidth
+                  onClick={() => setIsAccessibilityPanelOpen(true)}
+                >
+                  Open Settings
+                </CustomButton>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
       

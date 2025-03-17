@@ -68,24 +68,6 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* Accessibility Controls */}
-          <div className="hidden md:flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
-            <button 
-              onClick={toggleFontSize}
-              className="p-2 text-xs border rounded-md hover:bg-gray-100 focus:ring-2 focus:outline-none"
-              aria-label={isFontEnlarged ? "Decrease font size" : "Increase font size"}
-            >
-              {isFontEnlarged ? "A-" : "A+"}
-            </button>
-            <button 
-              onClick={toggleHighContrast}
-              className="p-2 text-xs border rounded-md hover:bg-gray-100 focus:ring-2 focus:outline-none"
-              aria-label={isHighContrast ? "Disable high contrast" : "Enable high contrast"}
-            >
-              {isHighContrast ? "Standard Contrast" : "High Contrast"}
-            </button>
-          </div>
-
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8" aria-label="Main Navigation">
             {navLinks.map((link) => (
@@ -99,14 +81,32 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* CTA Button (Desktop) */}
-          <div className="hidden md:block">
-            <CustomButton 
-              variant="primary"
-              aria-label="Find a Job"
-            >
-              Find a Job
-            </CustomButton>
+          {/* CTA Button (Desktop) with Accessibility Controls */}
+          <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={toggleFontSize}
+                className="p-2 text-xs border rounded-md hover:bg-gray-100 focus:ring-2 focus:outline-none"
+                aria-label={isFontEnlarged ? "Decrease font size" : "Increase font size"}
+              >
+                {isFontEnlarged ? "A-" : "A+"}
+              </button>
+              <button 
+                onClick={toggleHighContrast}
+                className="p-2 text-xs border rounded-md hover:bg-gray-100 focus:ring-2 focus:outline-none"
+                aria-label={isHighContrast ? "Disable high contrast" : "Enable high contrast"}
+              >
+                {isHighContrast ? "Standard" : "High Contrast"}
+              </button>
+            </div>
+            <Link to="/jobs">
+              <CustomButton 
+                variant="primary"
+                aria-label="Find a Job"
+              >
+                Find a Job
+              </CustomButton>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -162,9 +162,11 @@ const Navbar = () => {
             </Link>
           ))}
           <div className="pt-4">
-            <CustomButton variant="primary" fullWidth>
-              Find a Job
-            </CustomButton>
+            <Link to="/jobs">
+              <CustomButton variant="primary" fullWidth>
+                Find a Job
+              </CustomButton>
+            </Link>
           </div>
         </nav>
       </div>
