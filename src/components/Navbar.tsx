@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isFontEnlarged, setIsFontEnlarged] = useState(false);
+  const [isHighContrast, setIsHighContrast] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +23,18 @@ const Navbar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Apply font size preference to document
+    document.documentElement.style.fontSize = isFontEnlarged ? '120%' : '100%';
+    
+    // Apply high contrast if enabled
+    if (isHighContrast) {
+      document.body.classList.add('high-contrast');
+    } else {
+      document.body.classList.remove('high-contrast');
+    }
+  }, [isFontEnlarged, isHighContrast]);
+
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/#about' },
@@ -29,6 +43,14 @@ const Navbar = () => {
     { name: 'Stories', href: '/#testimonials' },
     { name: 'Contact', href: '/#contact' },
   ];
+
+  const toggleFontSize = () => {
+    setIsFontEnlarged(!isFontEnlarged);
+  };
+
+  const toggleHighContrast = () => {
+    setIsHighContrast(!isHighContrast);
+  };
 
   return (
     <header 
@@ -39,12 +61,30 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center" aria-label="AccessAbility Home">
             <Accessibility className="h-6 w-6 text-swaraj-blue mr-2" aria-hidden="true" />
             <div className="text-xl font-bold text-swaraj-blue">
-              Accessibility
+              AccessAbility
             </div>
           </Link>
+
+          {/* Accessibility Controls */}
+          <div className="hidden md:flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
+            <button 
+              onClick={toggleFontSize}
+              className="p-2 text-xs border rounded-md hover:bg-gray-100 focus:ring-2 focus:outline-none"
+              aria-label={isFontEnlarged ? "Decrease font size" : "Increase font size"}
+            >
+              {isFontEnlarged ? "A-" : "A+"}
+            </button>
+            <button 
+              onClick={toggleHighContrast}
+              className="p-2 text-xs border rounded-md hover:bg-gray-100 focus:ring-2 focus:outline-none"
+              aria-label={isHighContrast ? "Disable high contrast" : "Enable high contrast"}
+            >
+              {isHighContrast ? "Standard Contrast" : "High Contrast"}
+            </button>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8" aria-label="Main Navigation">
@@ -61,7 +101,10 @@ const Navbar = () => {
 
           {/* CTA Button (Desktop) */}
           <div className="hidden md:block">
-            <CustomButton variant="primary">
+            <CustomButton 
+              variant="primary"
+              aria-label="Find a Job"
+            >
               Find a Job
             </CustomButton>
           </div>
@@ -90,6 +133,23 @@ const Navbar = () => {
         )}
         aria-hidden={!isOpen}
       >
+        <div className="flex justify-center mb-4">
+          <button 
+            onClick={toggleFontSize}
+            className="mx-2 p-2 text-xs border rounded-md hover:bg-gray-100"
+            aria-label={isFontEnlarged ? "Decrease font size" : "Increase font size"}
+          >
+            {isFontEnlarged ? "A-" : "A+"}
+          </button>
+          <button 
+            onClick={toggleHighContrast}
+            className="mx-2 p-2 text-xs border rounded-md hover:bg-gray-100"
+            aria-label={isHighContrast ? "Disable high contrast" : "Enable high contrast"}
+          >
+            {isHighContrast ? "Standard" : "High Contrast"}
+          </button>
+        </div>
+        
         <nav className="flex flex-col space-y-6" aria-label="Mobile Navigation">
           {navLinks.map((link) => (
             <Link 
