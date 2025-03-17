@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Accessibility } from 'lucide-react';
 import CustomButton from './ui/CustomButton';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,11 +22,12 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About Us', href: '#about' },
-    { name: 'Services', href: '#services' },
-    { name: 'Stories', href: '#testimonials' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/' },
+    { name: 'About Us', href: '/#about' },
+    { name: 'Services', href: '/#services' },
+    { name: 'Jobs', href: '/jobs' },
+    { name: 'Stories', href: '/#testimonials' },
+    { name: 'Contact', href: '/#contact' },
   ];
 
   return (
@@ -37,28 +39,31 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
-          <a href="#home" className="flex items-center">
+          <Link to="/" className="flex items-center">
+            <Accessibility className="h-6 w-6 text-swaraj-blue mr-2" aria-hidden="true" />
             <div className="text-xl font-bold text-swaraj-blue">
-              Swarajability
+              Accessibility
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-8" aria-label="Main Navigation">
             {navLinks.map((link) => (
-              <a 
+              <Link 
                 key={link.name} 
-                href={link.href} 
+                to={link.href} 
                 className="nav-link"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
           {/* CTA Button (Desktop) */}
           <div className="hidden md:block">
-            <CustomButton variant="primary">Donate Now</CustomButton>
+            <CustomButton variant="primary">
+              Find a Job
+            </CustomButton>
           </div>
 
           {/* Mobile Menu Button */}
@@ -66,6 +71,7 @@ const Navbar = () => {
             className="md:hidden flex items-center"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
           >
             {isOpen ? (
               <X className="h-6 w-6 text-swaraj-text" />
@@ -82,21 +88,22 @@ const Navbar = () => {
           "fixed inset-0 bg-white z-40 flex flex-col pt-24 px-6 pb-8 md:hidden transition-transform duration-300 ease-in-out overflow-y-auto",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
+        aria-hidden={!isOpen}
       >
-        <nav className="flex flex-col space-y-6">
+        <nav className="flex flex-col space-y-6" aria-label="Mobile Navigation">
           {navLinks.map((link) => (
-            <a 
+            <Link 
               key={link.name} 
-              href={link.href} 
+              to={link.href} 
               className="text-lg font-medium text-swaraj-text hover:text-swaraj-blue transition-colors"
               onClick={() => setIsOpen(false)}
             >
               {link.name}
-            </a>
+            </Link>
           ))}
           <div className="pt-4">
             <CustomButton variant="primary" fullWidth>
-              Donate Now
+              Find a Job
             </CustomButton>
           </div>
         </nav>

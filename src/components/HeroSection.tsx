@@ -2,6 +2,7 @@
 import { ChevronDown } from 'lucide-react';
 import CustomButton from './ui/CustomButton';
 import AnimatedImage from './AnimatedImage';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   const scrollToNextSection = () => {
@@ -28,20 +29,22 @@ const HeroSection = () => {
         <div className="flex flex-col md:flex-row md:items-center">
           <div className="md:w-3/5 space-y-6 animate-fade-in">
             <div className="inline-block px-3 py-1 bg-swaraj-blue/10 rounded-full text-swaraj-blue font-medium text-sm mb-2">
-              Empowering Lives Through Accessibility
+              Empowering Lives Through Accessible Employment
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-swaraj-text leading-tight">
-              Empowering Individuals with Disabilities
+              Accessible Jobs for Everyone
             </h1>
             <p className="text-xl text-swaraj-darkGray max-w-xl">
-              Creating an inclusive society through awareness, education, and accessible technologies to empower individuals with disabilities.
+              Connecting talented individuals with disabilities to inclusive employers and providing resources for workplace success.
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
-              <CustomButton variant="primary" size="lg">
-                Learn About Our Work
-              </CustomButton>
+              <Link to="/jobs">
+                <CustomButton variant="primary" size="lg">
+                  Find Jobs
+                </CustomButton>
+              </Link>
               <CustomButton variant="secondary" size="lg">
-                Support Our Mission
+                For Employers
               </CustomButton>
             </div>
           </div>
@@ -52,7 +55,7 @@ const HeroSection = () => {
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
         <button 
           onClick={scrollToNextSection}
-          aria-label="Scroll down"
+          aria-label="Scroll down to learn more"
           className="bg-white/80 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300"
         >
           <ChevronDown className="h-6 w-6 text-swaraj-blue" />

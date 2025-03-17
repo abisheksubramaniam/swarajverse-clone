@@ -1,39 +1,40 @@
 
-import { Lightbulb, BookOpen, Users, HeartHandshake, Scale, Laptop } from 'lucide-react';
+import { Lightbulb, BookOpen, Users, HeartHandshake, Scale, Laptop, Briefcase, GraduationCap, Building } from 'lucide-react';
 import CustomButton from './ui/CustomButton';
 import ScrollAnimation from './ScrollAnimation';
+import { Link } from 'react-router-dom';
 
 const ServicesSection = () => {
   const services = [
     {
-      icon: <Lightbulb className="h-10 w-10 text-swaraj-blue" />,
-      title: "Awareness Programs",
-      description: "Raising awareness about disability rights and inclusion through workshops, seminars, and community events."
+      icon: <Briefcase className="h-10 w-10 text-swaraj-blue" />,
+      title: "Job Matching",
+      description: "Connecting individuals with disabilities to job opportunities that match their skills, experiences, and accommodations needs."
     },
     {
-      icon: <BookOpen className="h-10 w-10 text-swaraj-blue" />,
-      title: "Education & Training",
-      description: "Providing specialized education and skills training to empower individuals with disabilities for greater independence."
+      icon: <Building className="h-10 w-10 text-swaraj-blue" />,
+      title: "Workplace Accommodations",
+      description: "Consultation services for employers to create accessible work environments and implement reasonable accommodations."
     },
     {
-      icon: <Users className="h-10 w-10 text-swaraj-blue" />,
-      title: "Support Groups",
-      description: "Creating supportive communities where individuals and families can share experiences and resources."
+      icon: <GraduationCap className="h-10 w-10 text-swaraj-blue" />,
+      title: "Skills Training",
+      description: "Specialized training programs to help individuals develop marketable skills for today's competitive job market."
     },
     {
       icon: <HeartHandshake className="h-10 w-10 text-swaraj-blue" />,
-      title: "Rehabilitation Services",
-      description: "Offering comprehensive rehabilitation services to enhance physical, cognitive, and emotional well-being."
+      title: "Career Counseling",
+      description: "One-on-one career guidance to help identify strengths, overcome barriers, and develop personalized career paths."
     },
     {
       icon: <Scale className="h-10 w-10 text-swaraj-blue" />,
       title: "Advocacy",
-      description: "Advocating for policy changes and legal reforms to protect the rights of individuals with disabilities."
+      description: "Advocating for policy changes and legal reforms to protect employment rights of individuals with disabilities."
     },
     {
       icon: <Laptop className="h-10 w-10 text-swaraj-blue" />,
       title: "Assistive Technology",
-      description: "Developing and providing access to assistive technologies that enhance quality of life and independence."
+      description: "Resources and support for implementing assistive technologies that enhance workplace productivity and accessibility."
     }
   ];
 
@@ -42,11 +43,11 @@ const ServicesSection = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
           <ScrollAnimation>
-            <h2 className="section-heading">What We Do</h2>
+            <h2 className="section-heading">Our Services</h2>
           </ScrollAnimation>
           <ScrollAnimation delay={200}>
             <p className="section-subheading max-w-3xl mx-auto">
-              We provide a range of services aimed at empowering individuals with disabilities and creating a more inclusive society.
+              We provide a range of services aimed at empowering individuals with disabilities to find meaningful employment and creating a more inclusive workforce.
             </p>
           </ScrollAnimation>
         </div>
@@ -59,7 +60,9 @@ const ServicesSection = () => {
               delay={index * 100}
               className="h-full"
             >
-              <div className="card p-8 h-full flex flex-col card-hover border border-gray-100">
+              <div className="card p-8 h-full flex flex-col card-hover border border-gray-100" 
+                   tabIndex={0} 
+                   aria-label={service.title}>
                 <div className="bg-swaraj-blue/10 p-4 rounded-full w-fit mb-6">
                   {service.icon}
                 </div>
@@ -76,11 +79,13 @@ const ServicesSection = () => {
         <div className="mt-16 text-center">
           <ScrollAnimation>
             <p className="text-lg text-swaraj-darkGray mb-6 max-w-3xl mx-auto">
-              Need a specialized service or want to learn more about how we can help?
+              Ready to start your job search or need assistance with employment?
             </p>
-            <CustomButton variant="primary" size="lg">
-              Contact Our Team
-            </CustomButton>
+            <Link to="/jobs">
+              <CustomButton variant="primary" size="lg">
+                Explore Job Opportunities
+              </CustomButton>
+            </Link>
           </ScrollAnimation>
         </div>
       </div>
