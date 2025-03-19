@@ -8,7 +8,7 @@ import TestimonialsSection from '../components/TestimonialsSection';
 import ContactSection from '../components/ContactSection';
 import Footer from '../components/Footer';
 import AccessibilityPanel from '../components/AccessibilityPanel';
-import { Settings, Building, FileText } from 'lucide-react';
+import { Settings, Building, FileText, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CustomButton from '../components/ui/CustomButton';
 
@@ -54,7 +54,7 @@ const Index = () => {
         <section className="py-12 bg-gradient-to-r from-swaraj-blue/5 to-transparent">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-swaraj-text mb-10">
-              Quick Access
+              AccessAbility Resources
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -62,13 +62,13 @@ const Index = () => {
                 <div className="bg-swaraj-blue/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <FileText className="h-8 w-8 text-swaraj-blue" />
                 </div>
-                <h3 className="text-xl font-bold text-swaraj-text mb-2">Resume Tools</h3>
+                <h3 className="text-xl font-bold text-swaraj-text mb-2">Resume Builder</h3>
                 <p className="text-swaraj-darkGray mb-4">
-                  Create or analyze your resume with our AI-powered tools
+                  Create an accessible, ATS-friendly resume with our AI-powered tools
                 </p>
                 <Link to="/jobs?tab=resumeTools">
                   <CustomButton variant="outline" fullWidth>
-                    Access Tools
+                    Build Resume
                   </CustomButton>
                 </Link>
               </div>
@@ -79,7 +79,7 @@ const Index = () => {
                 </div>
                 <h3 className="text-xl font-bold text-swaraj-text mb-2">For Employers</h3>
                 <p className="text-swaraj-darkGray mb-4">
-                  Post jobs and manage applications in our employer dashboard
+                  Post inclusive job opportunities and connect with diverse talent
                 </p>
                 <Link to="/employer">
                   <CustomButton variant="outline" fullWidth>
@@ -90,18 +90,18 @@ const Index = () => {
               
               <div className="bg-white rounded-lg shadow-md p-6 text-center">
                 <div className="bg-swaraj-blue/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                  <Settings className="h-8 w-8 text-swaraj-blue" />
+                  <BookOpen className="h-8 w-8 text-swaraj-blue" />
                 </div>
-                <h3 className="text-xl font-bold text-swaraj-text mb-2">Accessibility Options</h3>
+                <h3 className="text-xl font-bold text-swaraj-text mb-2">Accessibility Resources</h3>
                 <p className="text-swaraj-darkGray mb-4">
-                  Customize your experience with our accessibility features
+                  Learn about workplace accommodations and disability rights
                 </p>
                 <CustomButton 
                   variant="outline" 
                   fullWidth
-                  onClick={() => setIsAccessibilityPanelOpen(true)}
+                  onClick={() => window.location.href = "#resources"}
                 >
-                  Open Settings
+                  View Resources
                 </CustomButton>
               </div>
             </div>

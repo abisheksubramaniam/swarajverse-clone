@@ -31,7 +31,7 @@ const AboutSection = () => {
           </ScrollAnimation>
           <ScrollAnimation delay={200}>
             <p className="section-subheading max-w-3xl mx-auto">
-              Swarajability is dedicated to promoting inclusion and accessibility for individuals with disabilities through innovative programs and advocacy.
+              AccessAbility is dedicated to promoting inclusion and accessibility for individuals with disabilities through innovative job matching and career development services.
             </p>
           </ScrollAnimation>
         </div>
@@ -55,14 +55,14 @@ const AboutSection = () => {
             <ScrollAnimation animation="fade-in-up">
               <h3 className="text-2xl font-bold text-swaraj-text">Our Mission</h3>
               <p className="text-swaraj-darkGray mt-3">
-                We aim to create an inclusive society where individuals with disabilities can achieve their full potential through awareness, education, and accessible technologies.
+                We aim to create an inclusive job marketplace where individuals with disabilities can achieve their full potential through targeted job matching, employer education, and accessible technologies.
               </p>
             </ScrollAnimation>
 
             <ScrollAnimation animation="fade-in-up" delay={100}>
               <h3 className="text-2xl font-bold text-swaraj-text">Our Vision</h3>
               <p className="text-swaraj-darkGray mt-3">
-                A world where disabilities are not barriers but unique perspectives that enrich our collective experience. We envision communities that embrace diversity and provide equal opportunities for all.
+                A world where disabilities are not barriers to employment but unique perspectives that enrich the workforce. We envision businesses that embrace diversity and provide equal opportunities for all.
               </p>
             </ScrollAnimation>
 

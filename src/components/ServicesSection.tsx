@@ -1,5 +1,5 @@
 
-import { Lightbulb, BookOpen, Users, HeartHandshake, Scale, Laptop, Briefcase, GraduationCap, Building } from 'lucide-react';
+import { Lightbulb, BookOpen, Users, HeartHandshake, Scale, Laptop, Briefcase, GraduationCap, Building, FileSearch, PenTool, Languages, Headphones, Activity } from 'lucide-react';
 import CustomButton from './ui/CustomButton';
 import ScrollAnimation from './ScrollAnimation';
 import { Link } from 'react-router-dom';
@@ -8,33 +8,33 @@ const ServicesSection = () => {
   const services = [
     {
       icon: <Briefcase className="h-10 w-10 text-swaraj-blue" />,
-      title: "Job Matching",
-      description: "Connecting individuals with disabilities to job opportunities that match their skills, experiences, and accommodations needs."
+      title: "Accessible Job Matching",
+      description: "AI-powered job matching that considers your specific accessibility needs and accommodation requirements."
+    },
+    {
+      icon: <FileSearch className="h-10 w-10 text-swaraj-blue" />,
+      title: "Resume Builder & Analyzer",
+      description: "AI tools to create and optimize your resume, highlighting your strengths and ensuring it passes applicant tracking systems."
+    },
+    {
+      icon: <PenTool className="h-10 w-10 text-swaraj-blue" />,
+      title: "Personalized Career Guidance",
+      description: "One-on-one career counseling with experts who understand the unique challenges faced by job seekers with disabilities."
     },
     {
       icon: <Building className="h-10 w-10 text-swaraj-blue" />,
-      title: "Workplace Accommodations",
-      description: "Consultation services for employers to create accessible work environments and implement reasonable accommodations."
+      title: "Employer Accessibility Training",
+      description: "Education for employers on creating inclusive workplaces and implementing reasonable accommodations."
     },
     {
-      icon: <GraduationCap className="h-10 w-10 text-swaraj-blue" />,
-      title: "Skills Training",
-      description: "Specialized training programs to help individuals develop marketable skills for today's competitive job market."
+      icon: <Languages className="h-10 w-10 text-swaraj-blue" />,
+      title: "Accessibility Technology",
+      description: "Cutting-edge accessibility tools including screen readers, voice commands, and keyboard navigation to make job searching easier."
     },
     {
-      icon: <HeartHandshake className="h-10 w-10 text-swaraj-blue" />,
-      title: "Career Counseling",
-      description: "One-on-one career guidance to help identify strengths, overcome barriers, and develop personalized career paths."
-    },
-    {
-      icon: <Scale className="h-10 w-10 text-swaraj-blue" />,
-      title: "Advocacy",
-      description: "Advocating for policy changes and legal reforms to protect employment rights of individuals with disabilities."
-    },
-    {
-      icon: <Laptop className="h-10 w-10 text-swaraj-blue" />,
-      title: "Assistive Technology",
-      description: "Resources and support for implementing assistive technologies that enhance workplace productivity and accessibility."
+      icon: <Headphones className="h-10 w-10 text-swaraj-blue" />,
+      title: "24/7 Support",
+      description: "Round-the-clock assistance through our AI chatbot and dedicated support team, available in multiple accessible formats."
     }
   ];
 
@@ -47,7 +47,7 @@ const ServicesSection = () => {
           </ScrollAnimation>
           <ScrollAnimation delay={200}>
             <p className="section-subheading max-w-3xl mx-auto">
-              We provide a range of services aimed at empowering individuals with disabilities to find meaningful employment and creating a more inclusive workforce.
+              AccessAbility provides comprehensive services designed to bridge the gap between talented individuals with disabilities and employers seeking diverse talent.
             </p>
           </ScrollAnimation>
         </div>
