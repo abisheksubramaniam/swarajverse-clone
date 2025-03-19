@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { X, Eye, Ear, Hand, Brain, Speech, Sun, Moon, MousePointer, Keyboard, Mic } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Eye, Ear, Hand, Brain, Speech, MousePointer, Keyboard, Mic, MonitorCheck, Focus, Volume2, Palette } from 'lucide-react';
 import { useAccessibility } from '@/context/AccessibilityContext';
 import { toast } from "@/components/ui/use-toast";
 
@@ -23,119 +23,32 @@ const AccessibilityPanel: React.FC<AccessibilityPanelProps> = ({ isOpen, onClose
     setScreenReader,
     keyboardMode,
     setKeyboardMode,
+    voiceCommands,
+    setVoiceCommands,
+    isListening,
+    colorBlindMode,
+    setColorBlindMode,
+    focusMode,
+    setFocusMode,
+    textToSpeech,
+    setTextToSpeech,
+    startVoiceRecognition,
+    stopVoiceRecognition,
+    speakText
   } = useAccessibility();
 
-  const [voiceCommandsActive, setVoiceCommandsActive] = useState(false);
-  const [listening, setListening] = useState(false);
-
-  useEffect(() => {
-    if (keyboardMode) {
-      // Add enhanced focus outlines and keyboard navigation
-      document.body.classList.add('keyboard-focus-visible');
-      
-      // Add event listener for keyboard navigation
-      const handleKeyDown = (e: KeyboardEvent) => {
-        // Tab key navigation enhancement
-        if (e.key === 'Tab') {
-          document.body.classList.add('keyboard-navigation-active');
-        }
-      };
-      
-      window.addEventListener('keydown', handleKeyDown);
-      
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown);
-      };
-    } else {
-      document.body.classList.remove('keyboard-focus-visible');
-    }
-  }, [keyboardMode]);
-
-  // Implement screen reader support
-  useEffect(() => {
-    if (screenReader) {
-      // Add ARIA attributes and enhance screen reader support
-      const enhanceScreenReaderSupport = () => {
-        // Ensure all images have alt text
-        document.querySelectorAll('img:not([alt])').forEach(img => {
-          (img as HTMLImageElement).alt = 'Image';
-        });
-        
-        // Ensure all buttons have accessible names
-        document.querySelectorAll('button:not([aria-label]):not(:has(*))').forEach(button => {
-          if (!button.textContent?.trim()) {
-            button.setAttribute('aria-label', 'Button');
-          }
-        });
-      };
-      
-      enhanceScreenReaderSupport();
-      
-      // Announce screen reader mode is active
-      const announcement = document.createElement('div');
-      announcement.setAttribute('role', 'status');
-      announcement.setAttribute('aria-live', 'polite');
-      announcement.className = 'sr-only';
-      announcement.textContent = 'Screen reader support enabled';
-      document.body.appendChild(announcement);
-      
-      setTimeout(() => {
-        document.body.removeChild(announcement);
-      }, 1000);
-    }
-  }, [screenReader]);
-
-  // Handle voice commands
-  const toggleVoiceCommands = () => {
-    if (!voiceCommandsActive) {
-      startVoiceRecognition();
-    } else {
-      stopVoiceRecognition();
-    }
-  };
-
-  const startVoiceRecognition = () => {
-    // Check if browser supports speech recognition
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      setVoiceCommandsActive(true);
-      setListening(true);
-      
-      // Simulate voice recognition (in a real app, we would use the Web Speech API)
-      toast({
-        title: "Voice Commands Activated",
-        description: "Try saying: 'go to jobs', 'increase font size', or 'high contrast'",
-        duration: 5000,
-      });
-      
-      // This is a mockup of voice command functionality
-      // In a real implementation, we would use the SpeechRecognition API
-      setTimeout(() => {
-        setListening(false);
-      }, 5000);
-    } else {
-      toast({
-        title: "Voice Commands Not Supported",
-        description: "Your browser doesn't support voice recognition. Try using Chrome or Edge.",
-        variant: "destructive",
-        duration: 5000,
-      });
-    }
-  };
-
-  const stopVoiceRecognition = () => {
-    setVoiceCommandsActive(false);
-    setListening(false);
-    
-    toast({
-      title: "Voice Commands Deactivated",
-      duration: 3000,
-    });
-  };
+  const [testText, setTestText] = useState("This is a sample text to test text-to-speech functionality. Click the 'Speak' button to hear it.");
 
   if (!isOpen) return null;
 
   const handleFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFontSize(parseInt(e.target.value, 10));
+  };
+
+  const handleTextToSpeechTest = () => {
+    if (testText) {
+      speakText(testText);
+    }
   };
 
   return (
@@ -147,12 +60,11 @@ const AccessibilityPanel: React.FC<AccessibilityPanelProps> = ({ isOpen, onClose
       aria-labelledby="accessibility-title"
     >
       <div 
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full mx-4 p-6 max-h-[90vh] overflow-y-auto"
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full mx-4 p-6 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
           <h2 id="accessibility-title" className="text-xl font-bold flex items-center">
-            <span className="sr-only">Accessibility</span>
             <span aria-hidden="true">♿</span> Accessibility Options
           </h2>
           <button 
@@ -209,6 +121,20 @@ const AccessibilityPanel: React.FC<AccessibilityPanelProps> = ({ isOpen, onClose
                 </label>
               </div>
 
+              {/* Color Blind Mode */}
+              <div className="flex items-center">
+                <input
+                  id="color-blind-mode"
+                  type="checkbox"
+                  checked={colorBlindMode}
+                  onChange={(e) => setColorBlindMode(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+                <label htmlFor="color-blind-mode" className="ml-2 text-sm font-medium">
+                  Color Blind Friendly Mode
+                </label>
+              </div>
+
               {/* Dyslexic Font */}
               <div className="flex items-center">
                 <input
@@ -247,6 +173,28 @@ const AccessibilityPanel: React.FC<AccessibilityPanelProps> = ({ isOpen, onClose
             </div>
           </section>
 
+          {/* Focus & Attention Section */}
+          <section aria-labelledby="focus-settings">
+            <h3 id="focus-settings" className="text-lg font-medium mb-3 flex items-center">
+              <Focus className="h-5 w-5 mr-2" /> Focus & Attention
+            </h3>
+            <div className="space-y-4 pl-3">
+              {/* Focus Mode */}
+              <div className="flex items-center">
+                <input
+                  id="focus-mode"
+                  type="checkbox"
+                  checked={focusMode}
+                  onChange={(e) => setFocusMode(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+                <label htmlFor="focus-mode" className="ml-2 text-sm font-medium">
+                  Focus Mode (Reduces Distractions)
+                </label>
+              </div>
+            </div>
+          </section>
+
           {/* Assistive Technology Section */}
           <section aria-labelledby="assistive-tech-settings">
             <h3 id="assistive-tech-settings" className="text-lg font-medium mb-3 flex items-center">
@@ -267,14 +215,49 @@ const AccessibilityPanel: React.FC<AccessibilityPanelProps> = ({ isOpen, onClose
                 </label>
               </div>
               
+              {/* Text to Speech */}
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <input
+                    id="text-to-speech"
+                    type="checkbox"
+                    checked={textToSpeech}
+                    onChange={(e) => setTextToSpeech(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="text-to-speech" className="ml-2 text-sm font-medium">
+                    Text-to-Speech
+                  </label>
+                </div>
+                
+                {textToSpeech && (
+                  <div className="ml-6 space-y-2">
+                    <textarea
+                      value={testText}
+                      onChange={(e) => setTestText(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded text-sm"
+                      rows={3}
+                      aria-label="Text to speech test area"
+                    />
+                    <button
+                      onClick={handleTextToSpeechTest}
+                      className="flex items-center text-sm text-blue-600 hover:text-blue-700"
+                      aria-label="Test text to speech"
+                    >
+                      <Volume2 className="h-4 w-4 mr-1" /> Speak Text
+                    </button>
+                  </div>
+                )}
+              </div>
+              
               {/* Voice Commands */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
                     id="voice-commands"
                     type="checkbox"
-                    checked={voiceCommandsActive}
-                    onChange={toggleVoiceCommands}
+                    checked={voiceCommands}
+                    onChange={(e) => setVoiceCommands(e.target.checked)}
                     className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                   />
                   <label htmlFor="voice-commands" className="ml-2 text-sm font-medium">
@@ -282,16 +265,28 @@ const AccessibilityPanel: React.FC<AccessibilityPanelProps> = ({ isOpen, onClose
                   </label>
                 </div>
                 
-                {voiceCommandsActive && (
+                {voiceCommands && (
                   <button 
-                    className={`p-2 rounded-full ${listening ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-gray-100 text-gray-600'}`}
-                    onClick={listening ? stopVoiceRecognition : startVoiceRecognition}
-                    aria-label={listening ? "Stop listening" : "Start listening"}
+                    className={`p-2 rounded-full ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-gray-100 text-gray-600'}`}
+                    onClick={isListening ? stopVoiceRecognition : startVoiceRecognition}
+                    aria-label={isListening ? "Stop listening" : "Start listening"}
                   >
                     <Mic className="h-4 w-4" />
                   </button>
                 )}
               </div>
+              
+              {voiceCommands && (
+                <div className="bg-gray-50 p-3 rounded text-xs space-y-1">
+                  <p className="font-medium">Available Voice Commands:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Navigation: "go to home", "find jobs", "contact us"</li>
+                    <li>Font size: "increase font", "decrease font"</li>
+                    <li>Contrast: "toggle contrast", "high contrast"</li>
+                    <li>More: "help" (for full list of commands)</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </section>
 
@@ -314,6 +309,18 @@ const AccessibilityPanel: React.FC<AccessibilityPanelProps> = ({ isOpen, onClose
                   Enhanced Keyboard Navigation
                 </label>
               </div>
+              
+              {keyboardMode && (
+                <div className="bg-gray-50 p-3 rounded text-xs space-y-1">
+                  <p className="font-medium">Keyboard Shortcuts:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li><kbd>Ctrl</kbd> + <kbd>/</kbd>: Skip to main content</li>
+                    <li><kbd>Ctrl</kbd> + <kbd>A</kbd>: Open accessibility panel</li>
+                    <li><kbd>Tab</kbd>: Navigate through interactive elements</li>
+                    <li><kbd>Enter</kbd> / <kbd>Space</kbd>: Activate focused element</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </section>
 
@@ -325,9 +332,16 @@ const AccessibilityPanel: React.FC<AccessibilityPanelProps> = ({ isOpen, onClose
                 setDyslexicFont(false);
                 setReducedMotion(false);
                 setScreenReader(false);
-                setKeyboardMode(false);
-                setVoiceCommandsActive(false);
-                setListening(false);
+                setKeyboardMode(true); // Keep keyboard mode on by default
+                setVoiceCommands(false);
+                setColorBlindMode(false);
+                setFocusMode(false);
+                setTextToSpeech(false);
+                
+                toast({
+                  title: "Settings Reset",
+                  description: "Accessibility settings have been reset to defaults.",
+                });
               }}
               className="text-sm text-gray-600 hover:text-blue-600 underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
             >

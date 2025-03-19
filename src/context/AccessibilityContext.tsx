@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from '@/components/ui/use-toast';
 
 interface AccessibilityContextType {
   fontSize: number;
@@ -20,6 +21,13 @@ interface AccessibilityContextType {
   isListening: boolean;
   startVoiceRecognition: () => void;
   stopVoiceRecognition: () => void;
+  colorBlindMode: boolean;
+  setColorBlindMode: (enabled: boolean) => void;
+  focusMode: boolean;
+  setFocusMode: (enabled: boolean) => void;
+  textToSpeech: boolean;
+  setTextToSpeech: (enabled: boolean) => void;
+  speakText: (text: string) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -58,6 +66,21 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
   
   const [voiceCommands, setVoiceCommands] = useState<boolean>(() => {
     const saved = localStorage.getItem('a11y-voiceCommands');
+    return saved ? saved === 'true' : false;
+  });
+  
+  const [colorBlindMode, setColorBlindMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('a11y-colorBlindMode');
+    return saved ? saved === 'true' : false;
+  });
+  
+  const [focusMode, setFocusMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('a11y-focusMode');
+    return saved ? saved === 'true' : false;
+  });
+  
+  const [textToSpeech, setTextToSpeech] = useState<boolean>(() => {
+    const saved = localStorage.getItem('a11y-textToSpeech');
     return saved ? saved === 'true' : false;
   });
   
@@ -129,6 +152,28 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [voiceCommands]);
   
+  useEffect(() => {
+    localStorage.setItem('a11y-colorBlindMode', colorBlindMode.toString());
+    if (colorBlindMode) {
+      document.body.classList.add('color-blind-mode');
+    } else {
+      document.body.classList.remove('color-blind-mode');
+    }
+  }, [colorBlindMode]);
+  
+  useEffect(() => {
+    localStorage.setItem('a11y-focusMode', focusMode.toString());
+    if (focusMode) {
+      document.body.classList.add('focus-mode');
+    } else {
+      document.body.classList.remove('focus-mode');
+    }
+  }, [focusMode]);
+  
+  useEffect(() => {
+    localStorage.setItem('a11y-textToSpeech', textToSpeech.toString());
+  }, [textToSpeech]);
+  
   // Handle keyboard navigation
   const handleKeyDown = (e: KeyboardEvent) => {
     // Skip to main content
@@ -148,6 +193,11 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       if (accessibilityButton) {
         (accessibilityButton as HTMLElement).click();
       }
+    }
+    
+    // Add visual focus indicator
+    if (e.key === 'Tab') {
+      document.body.classList.add('using-keyboard');
     }
   };
   
@@ -171,6 +221,49 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     // Force a DOM reflow to ensure the empty string is set
     void announcer.offsetWidth;
     announcer.textContent = message;
+  };
+  
+  // Text to speech function
+  const speakText = (text: string) => {
+    if (!textToSpeech) return;
+    
+    if ('speechSynthesis' in window) {
+      // Stop any current speech
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+      
+      // Get available voices
+      let voices = window.speechSynthesis.getVoices();
+      
+      // If voices aren't loaded yet, wait for them
+      if (voices.length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', () => {
+          voices = window.speechSynthesis.getVoices();
+          // Try to find an English voice
+          const englishVoice = voices.find(voice => voice.lang.includes('en'));
+          if (englishVoice) utterance.voice = englishVoice;
+          
+          window.speechSynthesis.speak(utterance);
+        }, { once: true });
+      } else {
+        // Try to find an English voice
+        const englishVoice = voices.find(voice => voice.lang.includes('en'));
+        if (englishVoice) utterance.voice = englishVoice;
+        
+        window.speechSynthesis.speak(utterance);
+      }
+    } else {
+      console.warn('Speech synthesis not supported in this browser');
+      toast({
+        title: "Feature not supported",
+        description: "Text-to-speech is not supported in your browser.",
+        variant: "destructive",
+      });
+    }
   };
   
   // Voice recognition functions
@@ -219,10 +312,23 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       // Store in window for easy access
       // @ts-ignore
       window.accessibilityRecognition = recognition;
+      
+      toast({
+        title: "Voice Commands Activated",
+        description: "Try saying: 'go to home', 'find jobs', 'increase font size', etc.",
+        duration: 5000,
+      });
     } catch (error) {
       console.error('Failed to start voice recognition', error);
       setVoiceCommands(false);
       setIsListening(false);
+      
+      toast({
+        title: "Voice Commands Failed",
+        description: "Could not activate voice commands. Your browser may not support this feature.",
+        variant: "destructive",
+        duration: 5000,
+      });
     }
   };
   
@@ -243,6 +349,11 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     
     setIsListening(false);
     announceMessage("Voice commands disabled");
+    
+    toast({
+      title: "Voice Commands Deactivated",
+      duration: 3000,
+    });
   };
   
   const processVoiceCommand = (command: string) => {
@@ -275,11 +386,33 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     } else if (command.includes('toggle dyslexic font') || command.includes('dyslexic font')) {
       setDyslexicFont(prev => !prev);
       announceMessage(dyslexicFont ? "Dyslexic font disabled" : "Dyslexic font enabled");
+    } else if (command.includes('toggle color blind') || command.includes('color blind mode')) {
+      setColorBlindMode(prev => !prev);
+      announceMessage(colorBlindMode ? "Color blind mode disabled" : "Color blind mode enabled");
+    } else if (command.includes('toggle focus mode') || command.includes('focus mode')) {
+      setFocusMode(prev => !prev);
+      announceMessage(focusMode ? "Focus mode disabled" : "Focus mode enabled");
+    } else if (command.includes('toggle text to speech') || command.includes('text to speech')) {
+      setTextToSpeech(prev => !prev);
+      announceMessage(textToSpeech ? "Text to speech disabled" : "Text to speech enabled");
+    }
+    
+    // Login/Signup commands
+    else if (command.includes('login') || command.includes('sign in')) {
+      const loginButton = document.querySelector('button[aria-label="Log in to your account"]');
+      if (loginButton) {
+        (loginButton as HTMLElement).click();
+      }
+    } else if (command.includes('signup') || command.includes('sign up') || command.includes('create account')) {
+      const signupButton = document.querySelector('button[aria-label="Create a new account"]');
+      if (signupButton) {
+        (signupButton as HTMLElement).click();
+      }
     }
     
     // Help command
     else if (command.includes('help') || command.includes('list commands')) {
-      announceMessage("Available voice commands: go to home, go to jobs, go to employer, contact us, increase font, decrease font, toggle contrast, toggle dyslexic font, help");
+      announceMessage("Available voice commands: go to home, go to jobs, go to employer, contact us, increase font, decrease font, toggle contrast, toggle dyslexic font, login, signup, help");
     }
   };
 
@@ -302,6 +435,13 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     isListening,
     startVoiceRecognition,
     stopVoiceRecognition,
+    colorBlindMode,
+    setColorBlindMode,
+    focusMode,
+    setFocusMode,
+    textToSpeech,
+    setTextToSpeech,
+    speakText,
   };
 
   return (
